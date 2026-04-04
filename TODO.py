@@ -1,7 +1,7 @@
 # 命令行TODO列表工具
 # 功能：支持添加、列出、标记完成、删除任务和退出
 
-tasks = []  # 存储任务列表，每个任务是一个字典
+tasks = []
 
 def show_menu():
     """显示菜单"""
@@ -21,10 +21,10 @@ def add_task(description):
         return
     
     task = {
-        "id": len(tasks) + 1,  # 任务编号从1开始
+        "id": len(tasks) + 1,  
         "description": description,
         "completed": False,
-        "created_at": "刚刚"  # 简化版，实际可以存储时间戳
+        "created_at": "刚刚"  
     }
     tasks.append(task)
     print(f"✓ 已添加任务: {description} (ID: {task['id']})")
@@ -89,7 +89,6 @@ def handle_input(user_input):
         if len(parts) < 2:
             print("错误: 请提供任务描述，例如: add \"买牛奶\"")
         else:
-            # 移除可能的引号
             description = parts[1].strip('"\'')
             add_task(description)
     

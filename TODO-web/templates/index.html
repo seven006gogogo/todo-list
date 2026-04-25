@@ -284,10 +284,47 @@
             </style>
 </head>
 <body>
-    <div class="container">
+    <!-- 登录注册容器 -->
+    <div id="authContainer">
+        <!-- 登录表单 -->
+        <div id="loginBox" class="container" style="display: block;">
+            <div class="header">
+                <h1>🔐 登录</h1>
+                <p>请登录以继续</p>
+            </div>
+            <div class="content">
+                <input type="text" id="loginUsername" placeholder="用户名" class="task-input" style="margin-bottom:10px">
+                <input type="password" id="loginPassword" placeholder="密码" class="task-input" style="margin-bottom:10px">
+                <button class="btn btn-primary" onclick="login()">登录</button>
+                <button class="btn btn-secondary" onclick="showRegister()">去注册</button>
+            </div>
+        </div>
+
+        <!-- 注册表单 -->
+        <div id="registerBox" class="container" style="display: none;">
+            <div class="header">
+                <h1>📝 注册</h1>
+                <p>创建新账号</p>
+            </div>
+            <div class="content">
+                <input type="text" id="regUsername" placeholder="用户名" class="task-input" style="margin-bottom:10px">
+                <input type="password" id="regPassword" placeholder="密码" class="task-input" style="margin-bottom:10px">
+                <button class="btn btn-primary" onclick="register()">注册</button>
+                <button class="btn btn-secondary" onclick="showLogin()">返回登录</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 将原来的 TODO 容器加上 id -->
+    <div id="todoApp" class="container" style="display: none;">
+        <!-- 你原来的所有 TODO 内容保持不变 -->
+    </div>
+
+    <div id="todoApp" class="container" style="display: none;">
         <div class="header">
             <h1>📝 TODO列表</h1>
             <p>高效管理你的任务清单</p>
+            <button onclick="logout()" style="margin-top: 10px; background: #ff4757; color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer;">🚪 退出登录</button>
         </div>
 
         <div class="content">
@@ -325,7 +362,117 @@
     <script>
         // API基础URL
         const API_BASE = '/api';
+        // Token 存储的 key
+        const TOKEN_KEY = 'todo_token';
 
+        // ===== 1. 注册函数 =====
+        async function register() {
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value;
+    
+            if (!username || !password) {
+                showMessage('请填写用户名和密码', 'error');
+                return;
+            }
+    
+            try {
+                const response = await fetch(`${API_BASE}/register`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username, password})
+                });
+    
+                const data = await response.json();
+    
+                if (data.success) {
+                    showMessage('注册成功，请登录');
+                    document.getElementById('regUsername').value = '';
+                    document.getElementById('regPassword').value = '';
+                    showLogin();  // 自动切换到登录页
+                } else {
+                    showMessage(data.error, 'error');
+                }
+            }catch (error) {
+                console.error('注册失败:', error);
+                showMessage('注册失败，请重试', 'error');
+            }
+        }
+
+        // ===== 2. 登录函数 =====
+        async function login() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+           
+            if (!username || !password) {
+                showMessage('请填写用户名和密码', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username, password})
+                });
+    
+                const data = await response.json();
+    
+                if (data.success) {
+                    // 保存 token 到 localStorage
+                    localStorage.setItem(TOKEN_KEY, data.token);
+                    showMessage('登录成功');
+        
+                    // 隐藏登录页，显示 TODO 页
+                    document.getElementById('loginUsername').value = '';
+                    document.getElementById('loginPassword').value = '';
+                    document.getElementById('authContainer').style.display = 'none';
+                    document.getElementById('todoApp').style.display = 'block';
+        
+                    // 加载任务列表
+                    fetchTasks();
+                } else {
+                    showMessage(data.error, 'error');
+                }
+            } catch (error) {
+                console.error('登录失败:', error);
+                showMessage('登录失败，请重试', 'error');
+            }
+        }
+
+        // ===== 3. 退出登录 =====
+        function logout() {
+            localStorage.removeItem(TOKEN_KEY);
+            document.getElementById('authContainer').style.display = 'block';
+            document.getElementById('todoApp').style.display = 'none';
+             showMessage('已退出登录');
+        }
+
+        // ===== 4. 页面切换函数 =====
+        function showLogin() {
+            document.getElementById('loginBox').style.display = 'block';
+            document.getElementById('registerBox').style.display = 'none';
+        }
+
+        function showRegister() {
+            document.getElementById('loginBox').style.display = 'none';
+            document.getElementById('registerBox').style.display = 'block';
+        }
+
+        // ===== 5. 检查是否已登录 =====
+        function checkAuth() {
+            const token = localStorage.getItem(TOKEN_KEY);
+            if (token) {
+                 // 已登录，直接显示 TODO 页
+                document.getElementById('authContainer').style.display = 'none';
+                document.getElementById('todoApp').style.display = 'block';
+                fetchTasks();
+            } else {
+                // 未登录，显示登录页
+                document.getElementById('authContainer').style.display = 'block';
+                document.getElementById('todoApp').style.display = 'none';
+            }
+        }
+         
         // 显示消息提示
         function showMessage(message, type = 'success') {
             const messageDiv = document.createElement('div');
@@ -341,7 +488,18 @@
         // 获取所有任务
         async function fetchTasks() {
             try {
-                const response = await fetch(`${API_BASE}/tasks`);
+                const token = localStorage.getItem(TOKEN_KEY);
+                const response = await fetch(`${API_BASE}/tasks`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (response.status === 401) {
+                    logout();
+                    showMessage('登录已过期，请重新登录', 'error');
+                    return;
+                }
+                
                 const data = await response.json();
 
                 if (data.success) {
@@ -365,6 +523,7 @@
             }
 
             try {
+                const token = localStorage.getItem(TOKEN_KEY);
                 const response = await fetch(`${API_BASE}/tasks`, {
                     method: 'POST',
                     headers: {
@@ -372,6 +531,12 @@
                     },
                     body: JSON.stringify({ description })
                 });
+
+                if (response.status === 401) {
+                    logout();
+                    showMessage('登录已过期，请重新登录', 'error');
+                    return;
+                }
 
                 const data = await response.json();
 
@@ -391,10 +556,17 @@
         // 切换任务状态
         async function toggleTask(taskId) {
             try {
+                const token = localStorage.getItem(TOKEN_KEY);
                 const response = await fetch(`${API_BASE}/tasks/${taskId}/toggle`, {
                     method: 'PATCH'
                 });
 
+                if (response.status === 401) {
+                    logout();
+                    showMessage('登录已过期，请重新登录', 'error');
+                    return;
+                }
+                
                 const data = await response.json();
 
                 if (data.success) {

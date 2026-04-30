@@ -1,17 +1,20 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-from datetime import datetime
+from datetime import datetime, timedelta
 import sqlite3
 import jwt
 from werkzeug.security import generate_password_hash, check_password_hash
-import datetime
+import os
 
 app = Flask(__name__)
 CORS(app)
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, 'todo.db')
+
 
 def init_db():
-    conn = sqlite3.connect('todo.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     # 创建用户表
     c.execute('''
@@ -50,7 +53,7 @@ def register():
     # 密码加密
     hashed_password = generate_password_hash(password)
     
-    conn = sqlite3.connect('todo.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     try:
         c.execute(
@@ -75,7 +78,7 @@ def login():
     if not username or not password:
         return jsonify({"success": False, "error": "用户名和密码不能为空"}), 400
     
-    conn = sqlite3.connect('todo.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("SELECT id, password FROM users WHERE username = ?", (username,))
     row = c.fetchone()
@@ -92,7 +95,7 @@ def login():
     
     # 生成 JWT token，有效期7天
     token = jwt.encode(
-        {"user_id": user_id, "username": username, "exp": datetime.datetime.utcnow() + datetime.timedelta(days=7)},
+        {"user_id": user_id, "username": username, "exp": datetime.utcnow() + timedelta(days=7)},
         "seven006-secret-key",  # 生产环境请改用环境变量
         algorithm="HS256"
     )
@@ -131,7 +134,7 @@ def get_tasks():
     if not user_id:
         return jsonify({"success": False, "error": "请先登录"}), 401
     
-    conn = sqlite3.connect('todo.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute(
         "SELECT id, description, completed, created_at FROM tasks WHERE user_id = ? ORDER BY id DESC",
@@ -164,7 +167,6 @@ def get_tasks():
     })
 
 @app.route('/api/tasks', methods=['POST'])
-@app.route('/api/tasks', methods=['POST'])
 def add_task():
     """添加新任务"""
     user_id = get_user_from_token(request)
@@ -177,7 +179,7 @@ def add_task():
     if not description:
         return jsonify({"success": False, "error": "任务描述不能为空"}), 400
     
-    conn = sqlite3.connect('todo.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute(
         "INSERT INTO tasks (user_id, description) VALUES (?, ?)",
@@ -206,7 +208,7 @@ def delete_task(task_id):
     if not user_id:
         return jsonify({"success": False, "error": "请先登录"}), 401
     
-    conn = sqlite3.connect('todo.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     
     # 先查询任务是否存在且属于当前用户
@@ -234,7 +236,7 @@ def toggle_task(task_id):
     if not user_id:
         return jsonify({"success": False, "error": "请先登录"}), 401
     
-    conn = sqlite3.connect('todo.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     
     # 先查询任务是否存在且属于当前用户

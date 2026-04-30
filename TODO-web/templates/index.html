@@ -315,11 +315,6 @@
         </div>
     </div>
 
-    <!-- 将原来的 TODO 容器加上 id -->
-    <div id="todoApp" class="container" style="display: none;">
-        <!-- 你原来的所有 TODO 内容保持不变 -->
-    </div>
-
     <div id="todoApp" class="container" style="display: none;">
         <div class="header">
             <h1>📝 TODO列表</h1>
@@ -527,7 +522,8 @@
                 const response = await fetch(`${API_BASE}/tasks`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({ description })
                 });
@@ -558,7 +554,10 @@
             try {
                 const token = localStorage.getItem(TOKEN_KEY);
                 const response = await fetch(`${API_BASE}/tasks/${taskId}/toggle`, {
-                    method: 'PATCH'
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
 
                 if (response.status === 401) {
@@ -588,9 +587,19 @@
             }
 
             try {
+                const token = localStorage.getItem(TOKEN_KEY);
                 const response = await fetch(`${API_BASE}/tasks/${taskId}`, {
-                    method: 'DELETE'
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
+
+                if (response.status === 401) {
+                    logout();
+                    showMessage('登录已过期，请重新登录', 'error');
+                    return;
+                }
 
                 const data = await response.json();
 
@@ -661,8 +670,8 @@
             }
         });
 
-        // 页面加载时获取任务列表
-        fetchTasks();
+        // 页面加载时根据登录状态初始化界面
+        checkAuth();
         // 每30秒自动刷新一次（可选）
         setInterval(fetchTasks, 30000);
     </script>

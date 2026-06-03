@@ -5,6 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的TODO列表工具 - 网页版</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap');
+
+        .art-title {
+            font-family: 'ZCOOL KuaiLe', 'Comic Sans MS', cursive; 
+            font-size: 3.5rem; 
+            color: #fff; 
+            letter-spacing: 4px; 
+            display: inline-block; 
+            margin-bottom: 15px;
+        
+            text-shadow: 
+                -3px -3px 0 var(--border-color),
+                 3px -3px 0 var(--border-color),
+                -3px  3px 0 var(--border-color),
+                 3px  3px 0 var(--border-color),
+                 6px  6px 0px var(--border-color); 
+                 
+            animation: jellyFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes jellyFloat {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg); 
+            }
+            25% { 
+                transform: translateY(-8px) rotate(-3deg) scale(1.02); /* 向上飘，微微左倾，稍微变大 */
+            }
+            75% { 
+                transform: translateY(4px) rotate(3deg) scale(0.98); /* 向下沉，微微右倾，稍微变小 */
+            }
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -339,8 +371,8 @@
 
     <div id="todoApp" class="container" style="display: none;">
         <div class="header">
-            <h1>📝 TODO列表</h1>
-            <p>高效管理你的任务清单</p>
+            <h1 class="art-title">To-Do List ✨</h1>
+            <p style="font-weight: bold; color: var(--border-color); font-size: 1.1em;">高效管理你的任务清单</p>
             <button onclick="logout()" style="margin-top: 10px; background: #ff4757; color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer;">🚪 退出登录</button>
         </div>
 

@@ -7,7 +7,6 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap');
 
-/* ========== 基础变量 ========== */
 :root{
     --primary:#667eea;
     --primary-2:#764ba2;
@@ -16,7 +15,6 @@
     --warning:#ff7a45;
     --text:#2d3436;
     --muted:#7b8794;
-    --border-color:#2b2350;
     --glass:rgba(255,255,255,0.84);
 }
 
@@ -45,6 +43,7 @@ body{
     color:#fff;
 }
 .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(102,126,234,.38); }
+.btn-primary:disabled{ opacity:.6; cursor:not-allowed; transform:none; box-shadow:none; }
 .btn-danger{ background:#ff4757; color:#fff; }
 .btn-danger:hover{ background:#ff3838; }
 .btn-sm{ padding:6px 12px; font-size:.8rem; }
@@ -80,7 +79,7 @@ body{
 }
 
 /* ============================================================
-   一、登录页
+   一、登录 / 注册页
    ============================================================ */
 #loginPage{
     position:fixed; inset:0; z-index:100;
@@ -106,7 +105,7 @@ body{
     to{ opacity:1; transform:translateY(0) scale(1); }
 }
 
-.login-brand{ text-align:center; margin-bottom:26px; }
+.login-brand{ text-align:center; margin-bottom:22px; }
 .login-brand .brand-icon{
     display:inline-block; font-size:2.8rem; line-height:1; margin-bottom:12px;
     filter:drop-shadow(0 6px 12px rgba(0,0,0,.3));
@@ -123,7 +122,7 @@ body{
 }
 .login-brand p{ font-size:.85rem; color:rgba(255,255,255,.85); }
 
-.field{ margin-bottom:15px; }
+.field{ margin-bottom:14px; }
 .field label{
     display:block; font-size:.78rem; letter-spacing:1px;
     color:rgba(255,255,255,.92); margin-bottom:6px;
@@ -154,7 +153,7 @@ body{
 .pw-toggle:hover{ opacity:1; }
 
 .captcha-row{ display:flex; gap:10px; }
-.captcha-row .input{ flex:1; }
+.captcha-row .input{ flex:1; min-width:0; }
 #captchaCanvas{
     border-radius:10px; cursor:pointer; flex-shrink:0;
     border:1px solid rgba(255,255,255,.5);
@@ -163,18 +162,18 @@ body{
 
 .remember-row{
     display:flex; align-items:center; justify-content:space-between;
-    margin:4px 0 20px; font-size:.8rem;
+    margin:6px 0 18px; font-size:.8rem;
 }
 .checkbox-label{
     display:flex; align-items:center; gap:7px;
     color:rgba(255,255,255,.92); cursor:pointer; user-select:none;
 }
 .checkbox-label input{ width:15px; height:15px; accent-color:#667eea; cursor:pointer; }
-.link{ color:rgba(255,255,255,.85); cursor:pointer; text-decoration:underline; }
+.link{ color:rgba(255,255,255,.88); cursor:pointer; text-decoration:underline; font-size:.8rem; }
 .link:hover{ color:#fff; }
 
 .login-hint{
-    margin-top:16px; font-size:.72rem; text-align:center;
+    margin-top:14px; font-size:.72rem; text-align:center;
     color:rgba(255,255,255,.72); line-height:1.6;
 }
 
@@ -198,21 +197,13 @@ body{
 }
 .logo{
     font-family:'ZCOOL KuaiLe', cursive;
-    font-size:1.35rem; white-space:nowrap;
+    font-size:1.35rem; white-space:nowrap; cursor:pointer;
     background:linear-gradient(135deg,#667eea,#764ba2);
     -webkit-background-clip:text; background-clip:text;
     -webkit-text-fill-color:transparent;
+    user-select:none;
 }
-.nav{ flex:1; display:flex; gap:6px; }
-.nav-link{
-    padding:8px 14px; border-radius:10px; cursor:pointer;
-    font-size:.88rem; color:#4a5568; transition:all .2s; user-select:none;
-}
-.nav-link:hover{ background:rgba(102,126,234,.12); }
-.nav-link.active{
-    background:linear-gradient(135deg,#667eea,#764ba2);
-    color:#fff; box-shadow:0 4px 12px rgba(102,126,234,.3);
-}
+.nav{ flex:1; display:flex; gap:6px; align-items:center; }
 
 .user-menu{ position:relative; }
 .user-btn{
@@ -229,7 +220,9 @@ body{
     background:linear-gradient(135deg,#667eea,#764ba2);
     color:#fff; display:flex; align-items:center; justify-content:center;
     font-size:.8rem; font-weight:600; flex-shrink:0;
+    overflow:hidden;
 }
+.avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
 .caret{ font-size:.7rem; opacity:.6; }
 
 .dropdown{
@@ -257,7 +250,6 @@ body{
 @media (max-width:900px){
     .layout{ grid-template-columns:1fr; }
     .topbar-inner{ flex-wrap:wrap; gap:10px; }
-    .nav{ order:3; flex-basis:100%; }
 }
 
 .card{
@@ -370,10 +362,12 @@ body{
     background:#fff; color:#667eea; font-weight:600;
     box-shadow:0 2px 8px rgba(102,126,234,.18);
 }
-.deadline-wrap{
-    display:flex; align-items:center; gap:8px;
+
+.date-range{
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
     font-size:.78rem; color:var(--muted);
 }
+.date-range label{ white-space:nowrap; }
 .date-input{
     padding:7px 10px; border:2px solid #e6e8f0; border-radius:10px;
     font-size:.8rem; font-family:inherit; color:#3d4451; background:#fff;
@@ -427,7 +421,7 @@ body{
 }
 .empty-state .big{ font-size:2.2rem; display:block; margin-bottom:6px; }
 
-/* 个人中心弹窗 */
+/* ========== 个人中心弹窗 ========== */
 .modal-mask{
     position:fixed; inset:0; z-index:200;
     background:rgba(0,0,0,.4);
@@ -437,20 +431,73 @@ body{
 }
 .modal-mask.show{ display:flex; }
 .modal{
-    width:100%; max-width:340px;
+    width:100%; max-width:380px;
     background:#fff; border-radius:18px;
     padding:24px;
     box-shadow:0 24px 60px rgba(0,0,0,.3);
     animation:cardIn .3s cubic-bezier(.22,1,.36,1) both;
+    max-height:92vh; overflow-y:auto;
 }
 .modal h3{ font-size:1.05rem; margin-bottom:18px; text-align:center; }
+
+.avatar-section{ text-align:center; margin-bottom:14px; }
+.big-avatar{
+    width:80px; height:80px; border-radius:50%;
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    color:#fff;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:2rem; font-weight:600; overflow:hidden;
+    box-shadow:0 8px 20px rgba(102,126,234,.3);
+    margin-bottom:10px;
+}
+.big-avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+.avatar-actions{ display:flex; justify-content:center; gap:10px; align-items:center; }
+.avatar-upload{
+    display:inline-block; padding:6px 14px; border-radius:10px;
+    background:#eef1fb; color:#667eea; font-size:.78rem;
+    cursor:pointer; transition:all .2s;
+}
+.avatar-upload:hover{ background:#667eea; color:#fff; }
+.link-dark{ color:#7b8794; text-decoration:underline; cursor:pointer; font-size:.78rem; }
+.link-dark:hover{ color:#ff4757; }
+
+.picker-label{ font-size:.74rem; color:var(--muted); display:block; margin:12px 0 8px; }
+.picker-grid{
+    display:grid; grid-template-columns:repeat(8,1fr); gap:6px;
+    margin-bottom:16px;
+}
+.picker-grid span{
+    aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+    font-size:1.2rem; border-radius:10px; cursor:pointer;
+    background:#f6f7fc; transition:all .18s;
+}
+.picker-grid span:hover{ background:#e4e8f8; transform:scale(1.1); }
+
+.field-modal{ margin-bottom:12px; }
+.field-modal label{
+    display:block; font-size:.78rem; color:var(--muted);
+    margin-bottom:6px;
+}
+.field-modal .input{
+    width:100%; padding:10px 12px; border-radius:10px;
+    border:2px solid #e6e8f0; background:#fff; font-size:.9rem;
+    font-family:inherit; color:#2d3436;
+}
+.field-modal .input:focus{
+    outline:none; border-color:#667eea;
+    box-shadow:0 0 0 4px rgba(102,126,234,.12);
+}
+
 .profile-row{
     display:flex; justify-content:space-between; align-items:center;
-    padding:11px 0; border-bottom:1px solid #f0f2f7;
+    padding:10px 0; border-bottom:1px solid #f0f2f7;
     font-size:.86rem; color:var(--muted);
 }
 .profile-row b{ color:#2d3436; font-weight:600; }
-.modal .btn{ margin-top:20px; }
+
+.modal-actions{ display:flex; gap:10px; margin-top:18px; }
+.modal-actions .btn{ flex:1; }
 
 @media (max-width:600px){
     .input-group{ flex-direction:column; }
@@ -458,59 +505,104 @@ body{
     .stat-number{ font-size:1.2rem; }
     .card{ padding:16px; }
     .login-card{ padding:28px 22px; }
+    .picker-grid{ grid-template-columns:repeat(6,1fr); }
 }
 </style>
 </head>
 <body>
 
 <!-- ============================================================
-     一、登录页
+     一、登录 / 注册页
      ============================================================ -->
 <div id="loginPage">
     <div class="login-card">
-        <div class="login-brand">
-            <div class="brand-icon">📝</div>
-            <h1>欢迎回来</h1>
-            <p>登录后开始管理你的每日待办</p>
-        </div>
 
-        <div class="field">
-            <label>账号（手机号）</label>
-            <input type="tel" id="loginPhone" class="input" maxlength="11"
-                   placeholder="请输入 11 位手机号" autocomplete="username">
-        </div>
-
-        <div class="field">
-            <label>密码</label>
-            <div class="pw-wrap">
-                <input type="password" id="loginPassword" class="input"
-                       placeholder="请输入密码（至少 6 位）" autocomplete="current-password">
-                <span class="pw-toggle" onclick="togglePw()">👁</span>
+        <!-- 登录表单 -->
+        <div id="loginForm">
+            <div class="login-brand">
+                <div class="brand-icon">📝</div>
+                <h1>欢迎回来</h1>
+                <p>登录后开始管理你的每日待办</p>
             </div>
-        </div>
 
-        <div class="field">
-            <label>图形验证码</label>
-            <div class="captcha-row">
-                <input type="text" id="loginCaptcha" class="input" maxlength="4"
-                       placeholder="请输入验证码" autocomplete="off">
-                <canvas id="captchaCanvas" title="点击刷新验证码" onclick="refreshCaptcha()"></canvas>
+            <div class="field">
+                <label>账号（手机号）</label>
+                <input type="tel" id="loginPhone" class="input" maxlength="11"
+                       placeholder="请输入 11 位手机号" autocomplete="username">
             </div>
+
+            <div class="field">
+                <label>密码</label>
+                <div class="pw-wrap">
+                    <input type="password" id="loginPassword" class="input"
+                           placeholder="请输入密码" autocomplete="current-password">
+                    <span class="pw-toggle" onclick="togglePw('loginPassword', this)">👁</span>
+                </div>
+            </div>
+
+            <div class="remember-row">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="rememberMe"> 记住我
+                </label>
+                <span class="link" onclick="switchToRegister()">没有账号？去注册</span>
+            </div>
+
+            <button class="btn btn-primary btn-block" id="loginBtn" onclick="doLogin()">登 录</button>
+
+            <p class="login-hint">
+                账号请使用手机号登录<br>
+                若服务器不可用，将自动使用本地账号模式
+            </p>
         </div>
 
-        <div class="remember-row">
-            <label class="checkbox-label">
-                <input type="checkbox" id="rememberMe"> 记住我
-            </label>
-            <span class="link" onclick="refreshCaptcha()">看不清？换一张</span>
+        <!-- 注册表单 -->
+        <div id="registerForm" style="display:none">
+            <div class="login-brand">
+                <div class="brand-icon">✨</div>
+                <h1>创建账号</h1>
+                <p>注册后开始使用待办清单</p>
+            </div>
+
+            <div class="field">
+                <label>手机号</label>
+                <input type="tel" id="regPhone" class="input" maxlength="11"
+                       placeholder="请输入 11 位手机号" autocomplete="off">
+            </div>
+
+            <div class="field">
+                <label>密码</label>
+                <div class="pw-wrap">
+                    <input type="password" id="regPassword" class="input"
+                           placeholder="至少 6 位密码" autocomplete="new-password">
+                    <span class="pw-toggle" onclick="togglePw('regPassword', this)">👁</span>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>确认密码</label>
+                <div class="pw-wrap">
+                    <input type="password" id="regConfirm" class="input"
+                           placeholder="请再次输入密码" autocomplete="new-password">
+                    <span class="pw-toggle" onclick="togglePw('regConfirm', this)">👁</span>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>图形验证码</label>
+                <div class="captcha-row">
+                    <input type="text" id="regCaptcha" class="input" maxlength="4"
+                           placeholder="请输入验证码" autocomplete="off">
+                    <canvas id="captchaCanvas" title="点击刷新验证码" onclick="refreshCaptcha()"></canvas>
+                </div>
+            </div>
+
+            <div class="remember-row" style="justify-content:flex-end">
+                <span class="link" onclick="switchToLogin()">已有账号？去登录</span>
+            </div>
+
+            <button class="btn btn-primary btn-block" id="registerBtn" onclick="doRegister()">注 册</button>
         </div>
 
-        <button class="btn btn-primary btn-block" id="loginBtn" onclick="doLogin()">登 录</button>
-
-        <p class="login-hint">
-            账号请使用手机号登录<br>
-            若服务器不可用，将自动使用本地账号模式
-        </p>
     </div>
 </div>
 
@@ -521,11 +613,8 @@ body{
     <!-- 顶部导航栏 -->
     <header class="topbar">
         <div class="topbar-inner">
-            <div class="logo">📝 待办清单</div>
-
-            <nav class="nav">
-                <a class="nav-link active" id="navHome" onclick="goHome()">🏠 用户主页</a>
-            </nav>
+            <div class="logo" onclick="goHome()">📝 待办清单</div>
+            <nav class="nav"></nav>
 
             <div class="user-menu">
                 <button class="user-btn" onclick="toggleUserMenu(event)">
@@ -594,12 +683,22 @@ body{
                     </div>
                     <div class="type-row">
                         <div class="type-tabs">
-                            <button class="type-tab active" data-type="normal" onclick="setType('normal')">普通任务</button>
-                            <button class="type-tab" data-type="daily" onclick="setType('daily')">每日必做</button>
-                            <button class="type-tab" data-type="deadline" onclick="setType('deadline')">限时任务</button>
+                            <button class="type-tab active" data-type="normal" onclick="setType('normal')">📌 普通</button>
+                            <button class="type-tab" data-type="daily" onclick="setType('daily')">🔁 每日必做</button>
+                            <button class="type-tab" data-type="deadline" onclick="setType('deadline')">⏰ 限时</button>
                         </div>
-                        <div class="deadline-wrap" id="deadlineWrap" style="display:none">
-                            <label>截止日期</label>
+
+                        <!-- 每日必做：开始 + 结束日期 -->
+                        <div class="date-range" id="dailyRange" style="display:none">
+                            <label>开始</label>
+                            <input type="date" id="dailyStart" class="date-input">
+                            <label>结束</label>
+                            <input type="date" id="dailyEnd" class="date-input">
+                        </div>
+
+                        <!-- 限时：截止日期 -->
+                        <div class="date-range" id="deadlineWrap" style="display:none">
+                            <label>截止</label>
                             <input type="date" id="deadlineInput" class="date-input">
                         </div>
                     </div>
@@ -615,11 +714,52 @@ body{
 <div class="modal-mask" id="profileModal">
     <div class="modal">
         <h3>👤 个人中心</h3>
-        <div class="profile-row"><span>昵称</span><b id="pNick">-</b></div>
+
+        <div class="avatar-section">
+            <div class="big-avatar" id="bigAvatar">用</div>
+            <div class="avatar-actions">
+                <label class="avatar-upload">
+                    📷 上传图片
+                    <input type="file" accept="image/*" hidden onchange="handleAvatarUpload(event)">
+                </label>
+                <span class="link-dark" onclick="clearAvatar()">清除</span>
+            </div>
+        </div>
+
+        <span class="picker-label">或选择一个表情作为头像</span>
+        <div class="picker-grid">
+            <span onclick="pickAvatar('😀')">😀</span>
+            <span onclick="pickAvatar('😎')">😎</span>
+            <span onclick="pickAvatar('🤓')">🤓</span>
+            <span onclick="pickAvatar('🐱')">🐱</span>
+            <span onclick="pickAvatar('🐶')">🐶</span>
+            <span onclick="pickAvatar('🦊')">🦊</span>
+            <span onclick="pickAvatar('🐼')">🐼</span>
+            <span onclick="pickAvatar('🐨')">🐨</span>
+            <span onclick="pickAvatar('🦁')">🦁</span>
+            <span onclick="pickAvatar('🐯')">🐯</span>
+            <span onclick="pickAvatar('🦄')">🦄</span>
+            <span onclick="pickAvatar('🐸')">🐸</span>
+            <span onclick="pickAvatar('🌟')">🌟</span>
+            <span onclick="pickAvatar('🍀')">🍀</span>
+            <span onclick="pickAvatar('🎯')">🎯</span>
+            <span onclick="pickAvatar('🚀')">🚀</span>
+        </div>
+
+        <div class="field-modal">
+            <label>昵称</label>
+            <input type="text" id="pNickInput" class="input" maxlength="20"
+                   placeholder="请输入昵称">
+        </div>
+
         <div class="profile-row"><span>手机号</span><b id="pPhone">-</b></div>
         <div class="profile-row"><span>任务总数</span><b id="pTotal">0</b></div>
         <div class="profile-row"><span>已完成</span><b id="pDone">0</b></div>
-        <button class="btn btn-primary btn-block" onclick="closeProfile()">关 闭</button>
+
+        <div class="modal-actions">
+            <button class="btn btn-primary" onclick="saveProfile()">保 存</button>
+            <button class="btn" style="background:#eef0f5;color:#4a5568" onclick="closeProfile()">取 消</button>
+        </div>
     </div>
 </div>
 
@@ -628,10 +768,11 @@ body{
    0. 常量 & 工具函数
    ============================================================ */
 const API_BASE      = '/api';
-const K_SESSION     = 'todo_session_v1';     // 当前会话
-const K_REMEMBER    = 'todo_remember_v1';    // 记住的手机号
-const K_USERS       = 'todo_users_v1';       // 本地账号（离线模式）
-const K_TASK_PREFIX = 'todo_tasks_v1_';      // 任务数据前缀
+const K_SESSION     = 'todo_session_v1';
+const K_REMEMBER    = 'todo_remember_v1';
+const K_USERS       = 'todo_users_v1';
+const K_TASK_PREFIX = 'todo_tasks_v1_';
+const K_PROFILE_PREFIX = 'todo_profile_v1_';
 
 const pad2 = n => String(n).padStart(2, '0');
 
@@ -658,7 +799,6 @@ function esc(text){
     div.textContent = text == null ? '' : String(text);
     return div.innerHTML;
 }
-/* 简易本地密码散列（仅用于离线本地账号模式） */
 function simpleHash(str){
     let h = 0;
     for (let i = 0; i < str.length; i++){
@@ -668,7 +808,6 @@ function simpleHash(str){
     return 'h' + h;
 }
 
-/* 消息提示 */
 function showMessage(message, type = 'success'){
     const div = document.createElement('div');
     div.className = `message ${type}`;
@@ -701,6 +840,7 @@ function setupCanvas(){
 
 function refreshCaptcha(){
     const canvas = document.getElementById('captchaCanvas');
+    if (!canvas) return;
     if (!canvas._w) setupCanvas();
     const ctx = canvas.getContext('2d');
     const w = canvas._w, h = canvas._h, dpr = canvas._dpr;
@@ -708,21 +848,18 @@ function refreshCaptcha(){
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
 
-    // 背景渐变
     const grad = ctx.createLinearGradient(0, 0, w, h);
     grad.addColorStop(0, '#eef1ff');
     grad.addColorStop(1, '#e8e1f8');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
-    // 随机字符
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXY23456789';
     captchaCode = '';
     for (let i = 0; i < 4; i++){
         captchaCode += chars[Math.floor(Math.random() * chars.length)];
     }
 
-    // 干扰线
     for (let i = 0; i < 5; i++){
         ctx.beginPath();
         ctx.moveTo(Math.random() * w, Math.random() * h);
@@ -732,7 +869,6 @@ function refreshCaptcha(){
         ctx.stroke();
     }
 
-    // 噪点
     for (let i = 0; i < 36; i++){
         ctx.beginPath();
         ctx.arc(Math.random() * w, Math.random() * h, Math.random() * 1.4, 0, Math.PI * 2);
@@ -740,7 +876,6 @@ function refreshCaptcha(){
         ctx.fill();
     }
 
-    // 绘制文字
     for (let i = 0; i < captchaCode.length; i++){
         ctx.save();
         ctx.font = `${20 + Math.random() * 5}px 'ZCOOL KuaiLe', 'Comic Sans MS', sans-serif`;
@@ -756,31 +891,51 @@ function refreshCaptcha(){
 }
 
 /* ============================================================
-   2. 登录 / 会话
+   2. 登录 / 注册 / 会话
    ============================================================ */
 let currentUser = null;
 let tasks = [];
 let selectedDate = todayStr();
 let calCursor = new Date();
 let currentType = 'normal';
+let tempAvatar = '';   // 个人中心临时头像（保存前）
 
-function togglePw(){
-    const el = document.getElementById('loginPassword');
-    el.type = el.type === 'password' ? 'text' : 'password';
+function togglePw(id, el){
+    const input = document.getElementById(id);
+    input.type = input.type === 'password' ? 'text' : 'password';
+    el.textContent = input.type === 'password' ? '👁' : '🙈';
 }
 
-async function doLogin(){
-    const phone    = document.getElementById('loginPhone').value.trim();
-    const password = document.getElementById('loginPassword').value;
-    const captcha  = document.getElementById('loginCaptcha').value.trim();
+function switchToRegister(){
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('registerForm').style.display = 'block';
+    setupCanvas();
+    refreshCaptcha();
+    setTimeout(() => document.getElementById('regPhone').focus(), 30);
+}
+function switchToLogin(){
+    document.getElementById('registerForm').style.display = 'none';
+    document.getElementById('loginForm').style.display = 'block';
+    setTimeout(() => document.getElementById('loginPhone').focus(), 30);
+}
 
-    /* --- 前端基础校验 --- */
+/* ---- 注册 ---- */
+async function doRegister(){
+    const phone   = document.getElementById('regPhone').value.trim();
+    const pwd     = document.getElementById('regPassword').value;
+    const confirm = document.getElementById('regConfirm').value;
+    const captcha = document.getElementById('regCaptcha').value.trim();
+
     if (!/^1[3-9]\d{9}$/.test(phone)){
         showMessage('请输入正确的 11 位手机号', 'error');
         return;
     }
-    if (!password || password.length < 6){
+    if (!pwd || pwd.length < 6){
         showMessage('密码长度至少 6 位', 'error');
+        return;
+    }
+    if (pwd !== confirm){
+        showMessage('两次输入的密码不一致', 'error');
         return;
     }
     if (!captcha){
@@ -790,7 +945,75 @@ async function doLogin(){
     if (captcha.toUpperCase() !== captchaCode.toUpperCase()){
         showMessage('验证码错误，请重新输入', 'error');
         refreshCaptcha();
-        document.getElementById('loginCaptcha').value = '';
+        document.getElementById('regCaptcha').value = '';
+        return;
+    }
+
+    const btn = document.getElementById('registerBtn');
+    btn.disabled = true;
+    btn.textContent = '注册中...';
+
+    try {
+        const res = await fetch(`${API_BASE}/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: phone, password: pwd })
+        });
+        const data = await res.json();
+
+        if (data.success){
+            showMessage('注册成功，请登录');
+            document.getElementById('regPhone').value = '';
+            document.getElementById('regPassword').value = '';
+            document.getElementById('regConfirm').value = '';
+            document.getElementById('regCaptcha').value = '';
+            // 预填手机号到登录页
+            document.getElementById('loginPhone').value = phone;
+            switchToLogin();
+        } else {
+            showMessage(data.error || '注册失败', 'error');
+            refreshCaptcha();
+            document.getElementById('regCaptcha').value = '';
+        }
+    } catch (err){
+        console.warn('后端不可用，使用本地注册：', err);
+        localRegister(phone, pwd);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '注 册';
+    }
+}
+
+function localRegister(phone, pwd){
+    let users = {};
+    try { users = JSON.parse(localStorage.getItem(K_USERS) || '{}'); } catch(e){ users = {}; }
+
+    if (users[phone]){
+        showMessage('该手机号已注册，请直接登录', 'error');
+        return;
+    }
+    users[phone] = simpleHash(pwd);
+    localStorage.setItem(K_USERS, JSON.stringify(users));
+    showMessage('注册成功，请登录');
+    document.getElementById('regPhone').value = '';
+    document.getElementById('regPassword').value = '';
+    document.getElementById('regConfirm').value = '';
+    document.getElementById('regCaptcha').value = '';
+    document.getElementById('loginPhone').value = phone;
+    switchToLogin();
+}
+
+/* ---- 登录 ---- */
+async function doLogin(){
+    const phone = document.getElementById('loginPhone').value.trim();
+    const pwd   = document.getElementById('loginPassword').value;
+
+    if (!/^1[3-9]\d{9}$/.test(phone)){
+        showMessage('请输入正确的 11 位手机号', 'error');
+        return;
+    }
+    if (!pwd || pwd.length < 6){
+        showMessage('密码长度至少 6 位', 'error');
         return;
     }
 
@@ -798,12 +1021,11 @@ async function doLogin(){
     btn.disabled = true;
     btn.textContent = '登录中...';
 
-    /* --- 调用原有后端登录接口（username = 手机号） --- */
     try {
         const res = await fetch(`${API_BASE}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: phone, password })
+            body: JSON.stringify({ username: phone, password: pwd })
         });
         const data = await res.json();
 
@@ -811,48 +1033,41 @@ async function doLogin(){
             finishLogin(phone, data.token || 'server-token');
         } else {
             showMessage(data.error || '登录失败', 'error');
-            refreshCaptcha();
-            document.getElementById('loginCaptcha').value = '';
         }
     } catch (err){
-        /* 后端不可用 → 本地账号模式，保证页面可用 */
-        console.warn('后端不可用，切换到本地账号模式：', err);
-        localLogin(phone, password);
+        console.warn('后端不可用，切换本地账号模式：', err);
+        localLogin(phone, pwd);
     } finally {
         btn.disabled = false;
         btn.textContent = '登 录';
     }
 }
 
-/* 离线本地账号登录 */
-function localLogin(phone, password){
+function localLogin(phone, pwd){
     let users = {};
     try { users = JSON.parse(localStorage.getItem(K_USERS) || '{}'); } catch(e){ users = {}; }
 
-    const hashed = simpleHash(password);
-
+    const hashed = simpleHash(pwd);
     if (users[phone]){
         if (users[phone] !== hashed){
             showMessage('手机号或密码错误', 'error');
-            refreshCaptcha();
-            document.getElementById('loginCaptcha').value = '';
             return;
         }
     } else {
-        users[phone] = hashed;
-        localStorage.setItem(K_USERS, JSON.stringify(users));
-        showMessage('已创建本地账号');
+        showMessage('该手机号尚未注册，请先注册', 'error');
+        return;
     }
     finishLogin(phone, 'local-' + Date.now());
 }
 
-/* 登录成功后的收尾 */
 function finishLogin(phone, token){
     const remember = document.getElementById('rememberMe').checked;
+    const saved = loadUserProfile(phone) || {};
     const session = {
         phone,
         token,
-        nickname: '用户' + phone.slice(-4),
+        nickname: saved.nickname || ('用户' + phone.slice(-4)),
+        avatar: saved.avatar || '',
         loginAt: Date.now()
     };
 
@@ -867,12 +1082,10 @@ function finishLogin(phone, token){
     }
 
     document.getElementById('loginPassword').value = '';
-    document.getElementById('loginCaptcha').value = '';
     showMessage('登录成功');
     enterApp(session);
 }
 
-/* 页面加载时检查会话 */
 function checkSession(){
     let raw = sessionStorage.getItem(K_SESSION) || localStorage.getItem(K_SESSION);
     if (raw){
@@ -885,7 +1098,6 @@ function checkSession(){
     document.getElementById('appPage').style.display = 'none';
 }
 
-/* 退出登录 */
 function logout(){
     localStorage.removeItem(K_SESSION);
     sessionStorage.removeItem(K_SESSION);
@@ -904,30 +1116,25 @@ function logout(){
         document.getElementById('loginPhone').value = '';
         document.getElementById('rememberMe').checked = false;
     }
+    switchToLogin();
     refreshCaptcha();
     showMessage('已退出登录');
 }
 
-/* 进入主应用 */
 function enterApp(session){
     currentUser = session;
 
     document.getElementById('loginPage').style.display = 'none';
     document.getElementById('appPage').style.display = 'block';
 
-    document.getElementById('userName').textContent = session.nickname;
-    document.getElementById('userAvatar').textContent = session.nickname.slice(-2, -1) || '用';
+    renderUserInfo();
 
-    /* 读取该用户的任务数据 */
     tasks = loadTasks();
-
-    /* ★ 每次打开页面自动执行清理逻辑 */
     const removed = runCleanup();
     if (removed > 0){
         showMessage(`已自动清理 ${removed} 条过期任务`);
     }
 
-    /* 默认定位到今天 */
     selectedDate = todayStr();
     calCursor = new Date();
 
@@ -935,12 +1142,50 @@ function enterApp(session){
 }
 
 /* ============================================================
-   3. 数据存储（localStorage）
+   3. 用户资料（昵称、头像）
+   ============================================================ */
+function loadUserProfile(phone){
+    try {
+        return JSON.parse(localStorage.getItem(K_PROFILE_PREFIX + phone) || 'null');
+    } catch(e){ return null; }
+}
+function saveUserProfileStorage(phone, profile){
+    localStorage.setItem(K_PROFILE_PREFIX + phone, JSON.stringify(profile));
+}
+function persistSession(){
+    if (!currentUser) return;
+    const s = { ...currentUser };
+    if (sessionStorage.getItem(K_SESSION)){
+        sessionStorage.setItem(K_SESSION, JSON.stringify(s));
+    }
+    if (localStorage.getItem(K_SESSION)){
+        localStorage.setItem(K_SESSION, JSON.stringify(s));
+    }
+}
+
+function renderUserInfo(){
+    if (!currentUser) return;
+    const av = document.getElementById('userAvatar');
+    av.innerHTML = '';
+    av.style.background = 'linear-gradient(135deg,#667eea,#764ba2)';
+    if (currentUser.avatar && currentUser.avatar.startsWith('data:')){
+        const img = document.createElement('img');
+        img.src = currentUser.avatar;
+        av.appendChild(img);
+    } else if (currentUser.avatar){
+        av.textContent = currentUser.avatar;
+    } else {
+        av.textContent = (currentUser.nickname || '用').slice(-1);
+    }
+    document.getElementById('userName').textContent = currentUser.nickname;
+}
+
+/* ============================================================
+   4. 数据存储（localStorage）
    ============================================================ */
 function taskKey(){
     return K_TASK_PREFIX + (currentUser ? currentUser.phone : 'guest');
 }
-
 function loadTasks(){
     try {
         const raw = localStorage.getItem(taskKey());
@@ -951,7 +1196,6 @@ function loadTasks(){
         return [];
     }
 }
-
 function saveTasks(){
     try {
         localStorage.setItem(taskKey(), JSON.stringify(tasks));
@@ -962,14 +1206,12 @@ function saveTasks(){
 }
 
 /* ============================================================
-   4. ★ 数据清理与保留机制（核心）
+   5. ★ 数据清理与保留机制
    ------------------------------------------------------------
-   规则：
-   1) 普通任务(normal)      —— 只保留「今天」和「昨天」创建的，前天及更早一律清除（无论是否完成）
-   2) 每日必做(daily)       —— 永不清除，每天循环出现（完成状态按日期重置）
-   3) 限时任务(deadline)    —— 未超期（今天 <= 截止日期）时保留；
-                               一旦超期 → 自动转为普通任务，
-                               并以「截止日期」作为它的创建日期参与普通任务清理
+   - 普通(normal)    ：只保留「今天」和「昨天」创建的，前天及更早一律清除
+   - 每日必做(daily) ：永不清除（但只在 startDate ~ endDate 区间显示）
+   - 限时(deadline)  ：未超期保留；超期后转为普通任务，
+                       以「截止日期」作为创建日期参与普通任务清理
    ============================================================ */
 function runCleanup(){
     const today     = todayStr();
@@ -978,31 +1220,28 @@ function runCleanup(){
     const kept      = [];
 
     for (const t of tasks){
-        /* --- 每日必做：永不删除 --- */
+        // 每日必做：永不删除
         if (t.type === 'daily'){
             kept.push(t);
             continue;
         }
 
-        /* --- 限时任务 --- */
+        // 限时任务
         if (t.type === 'deadline' && t.deadline){
             if (today <= t.deadline){
-                // 还在期限内，保留
                 kept.push(t);
                 continue;
             }
-            // 已超期 → 转为普通任务
+            // 超期 → 转普通任务
             t.type     = 'normal';
-            t.date     = t.deadline;   // 以截止日期作为普通任务的“创建日期”
+            t.date     = t.deadline;
             t.deadline = null;
-            // 继续往下走普通任务的清理规则
         }
 
-        /* --- 普通任务：只保留今天和昨天 --- */
+        // 普通任务：只保留今天和昨天
         if (t.date === today || t.date === yesterday){
             kept.push(t);
         }
-        // 否则丢弃（前天及更早）
     }
 
     const removed = before - kept.length;
@@ -1014,34 +1253,29 @@ function runCleanup(){
 }
 
 /* ============================================================
-   5. 任务辅助函数
+   6. 任务查询辅助
    ============================================================ */
-/* 某一天应该显示哪些任务 */
 function getTasksForDate(d){
     return tasks.filter(t => {
         if (t.type === 'daily'){
-            // 每日必做：从创建日起，每天循环出现
-            return d >= t.date;
+            const s = t.startDate || t.date;
+            const e = t.endDate   || '9999-12-31';
+            return d >= s && d <= e;
         }
         if (t.type === 'deadline' && t.deadline){
-            // 限时任务：在 [创建日, 截止日] 区间内每天都显示
             return d >= t.date && d <= t.deadline;
         }
-        // 普通任务：只在它所属的那一天显示
         return t.date === d;
     });
 }
 
-/* 某个任务在某一天是否已完成 */
+/* ★ 关键修复：每天的完成状态独立保存 */
 function isDoneOn(t, d){
-    if (t.type === 'daily'){
-        return t.completedDate === d;
-    }
-    return !!t.completed;
+    return (t.completedDates || []).includes(d);
 }
 
 /* ============================================================
-   6. 日历渲染
+   7. 日历渲染
    ============================================================ */
 function calMove(delta){
     calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth() + delta, 1);
@@ -1059,17 +1293,13 @@ function renderCalendar(){
     const daysInPrev   = new Date(y, m, 0).getDate();
 
     const cells = [];
-
-    // 上月补齐
     for (let i = firstWeekday - 1; i >= 0; i--){
         const d = daysInPrev - i;
         cells.push({ day: d, other: true, date: fmtDate(new Date(y, m - 1, d)) });
     }
-    // 本月
     for (let d = 1; d <= daysInMonth; d++){
         cells.push({ day: d, other: false, date: fmtDate(new Date(y, m, d)) });
     }
-    // 下月补齐
     let nd = 1;
     while (cells.length % 7 !== 0){
         cells.push({ day: nd, other: true, date: fmtDate(new Date(y, m + 1, nd)) });
@@ -1113,11 +1343,10 @@ function goHome(){
     selectedDate = todayStr();
     calCursor = new Date();
     renderAll();
-    showMessage('已回到用户主页');
 }
 
 /* ============================================================
-   7. 主内容渲染
+   8. 主内容渲染
    ============================================================ */
 function renderAll(){
     renderCalendar();
@@ -1129,9 +1358,9 @@ function renderAll(){
 function renderDateHeader(){
     const t = todayStr();
     let label = selectedDate;
-    if (selectedDate === t)              label = '今天';
-    else if (selectedDate === dateOffset(-1)) label = '昨天';
-    else if (selectedDate === dateOffset(1))  label = '明天';
+    if (selectedDate === t)                    label = '今天';
+    else if (selectedDate === dateOffset(-1))  label = '昨天';
+    else if (selectedDate === dateOffset(1))   label = '明天';
 
     document.getElementById('dateTitle').textContent = `${label}的任务`;
     document.getElementById('dateSub').textContent   = formatDateCN(selectedDate);
@@ -1149,7 +1378,9 @@ function renderStats(){
 
 function badgeOf(t){
     if (t.type === 'daily'){
-        return `<span class="badge badge-daily">每日必做</span>`;
+        const s = t.startDate || t.date;
+        const e = t.endDate   || '长期';
+        return `<span class="badge badge-daily">每日必做 · ${s} ~ ${e}</span>`;
     }
     if (t.type === 'deadline' && t.deadline){
         const overdue = todayStr() > t.deadline;
@@ -1164,7 +1395,6 @@ function renderTasks(){
     const listEl = document.getElementById('taskList');
     const dayTasks = getTasksForDate(selectedDate);
 
-    // 未完成在前，其次按创建时间倒序（新的在前）
     const sorted = [...dayTasks].sort((a, b) => {
         const da = isDoneOn(a, selectedDate) ? 1 : 0;
         const db = isDoneOn(b, selectedDate) ? 1 : 0;
@@ -1192,7 +1422,6 @@ function renderTasks(){
                     <div class="task-description">${esc(t.title)}</div>
                     <div class="task-meta">
                         ${badgeOf(t)}
-                        <span>创建于 ${t.date}</span>
                     </div>
                 </div>
                 <div class="task-actions">
@@ -1203,15 +1432,27 @@ function renderTasks(){
 }
 
 /* ============================================================
-   8. 任务增删改
+   9. 任务增删改
    ============================================================ */
 function setType(type){
     currentType = type;
     document.querySelectorAll('.type-tab').forEach(el => {
         el.classList.toggle('active', el.dataset.type === type);
     });
-    const wrap = document.getElementById('deadlineWrap');
-    wrap.style.display = (type === 'deadline') ? 'flex' : 'none';
+
+    document.getElementById('dailyRange').style.display   = (type === 'daily')    ? 'flex' : 'none';
+    document.getElementById('deadlineWrap').style.display = (type === 'deadline') ? 'flex' : 'none';
+
+    if (type === 'daily'){
+        const s = document.getElementById('dailyStart');
+        const e = document.getElementById('dailyEnd');
+        if (!s.value) s.value = todayStr();
+        if (!e.value){
+            const d = new Date();
+            d.setDate(d.getDate() + 30);
+            e.value = fmtDate(d);
+        }
+    }
     if (type === 'deadline' && !document.getElementById('deadlineInput').value){
         document.getElementById('deadlineInput').value = todayStr();
     }
@@ -1227,37 +1468,59 @@ function addTask(){
         return;
     }
 
-    let deadline = null;
-    if (currentType === 'deadline'){
-        deadline = document.getElementById('deadlineInput').value;
-        if (!deadline){
+    const id = Date.now() + Math.floor(Math.random() * 1000);
+    const now = Date.now();
+
+    if (currentType === 'normal'){
+        const taskDate = selectedDate < todayStr() ? todayStr() : selectedDate;
+        tasks.push({
+            id, title, type: 'normal',
+            date: taskDate,
+            completedDates: [],
+            createdAt: now
+        });
+    } else if (currentType === 'daily'){
+        const s = document.getElementById('dailyStart').value;
+        const e = document.getElementById('dailyEnd').value;
+        if (!s || !e){
+            showMessage('请选择开始和结束日期', 'error');
+            return;
+        }
+        if (e < s){
+            showMessage('结束日期不能早于开始日期', 'error');
+            return;
+        }
+        tasks.push({
+            id, title, type: 'daily',
+            date: todayStr(),
+            startDate: s,
+            endDate: e,
+            completedDates: [],
+            createdAt: now
+        });
+    } else if (currentType === 'deadline'){
+        const dl = document.getElementById('deadlineInput').value;
+        if (!dl){
             showMessage('请选择截止日期', 'error');
             return;
         }
-        if (deadline < todayStr()){
+        if (dl < todayStr()){
             showMessage('截止日期不能早于今天', 'error');
             return;
         }
+        tasks.push({
+            id, title, type: 'deadline',
+            date: todayStr(),
+            deadline: dl,
+            completedDates: [],
+            createdAt: now
+        });
     }
-
-    // 过去日期不允许新建任务，自动归到今天
-    const taskDate = selectedDate < todayStr() ? todayStr() : selectedDate;
-
-    tasks.push({
-        id: Date.now() + Math.floor(Math.random() * 1000),
-        title,
-        type: currentType,
-        date: taskDate,
-        deadline,
-        completed: false,
-        completedDate: null,
-        createdAt: Date.now()
-    });
 
     saveTasks();
     input.value = '';
 
-    const tip = currentType === 'daily' ? '已添加每日必做任务'
+    const tip = currentType === 'daily'    ? '已添加每日必做'
               : currentType === 'deadline' ? '已添加限时任务'
               : '已添加任务';
     showMessage(tip);
@@ -1266,24 +1529,19 @@ function addTask(){
     input.focus();
 }
 
+/* ★ 关键修复：按日期独立切换完成状态 */
 function toggleTask(id){
     const t = tasks.find(x => x.id === id);
     if (!t) return;
 
-    const d = selectedDate;
+    if (!Array.isArray(t.completedDates)) t.completedDates = [];
 
-    if (t.type === 'daily'){
-        // 每日必做：按日期记录完成状态，第二天自动“重置”
-        if (t.completedDate === d){
-            t.completedDate = null;
-            t.completed = false;
-        } else {
-            t.completedDate = d;
-            t.completed = true;
-        }
+    const d = selectedDate;
+    const idx = t.completedDates.indexOf(d);
+    if (idx >= 0){
+        t.completedDates.splice(idx, 1);
     } else {
-        t.completed = !t.completed;
-        t.completedDate = t.completed ? d : null;
+        t.completedDates.push(d);
     }
 
     saveTasks();
@@ -1302,58 +1560,148 @@ function deleteTask(id){
 }
 
 /* ============================================================
-   9. 用户菜单 & 个人中心
+   10. 用户菜单 & 个人中心
    ============================================================ */
 function toggleUserMenu(e){
     e.stopPropagation();
     document.getElementById('userDropdown').classList.toggle('show');
 }
-
 document.addEventListener('click', () => {
     document.getElementById('userDropdown').classList.remove('show');
 });
 
 function openProfile(){
     if (!currentUser) return;
-    document.getElementById('pNick').textContent  = currentUser.nickname;
-    document.getElementById('pPhone').textContent = currentUser.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+    tempAvatar = currentUser.avatar || '';
+
+    document.getElementById('pNickInput').value = currentUser.nickname;
+    document.getElementById('pPhone').textContent =
+        currentUser.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
     document.getElementById('pTotal').textContent = tasks.length;
-    document.getElementById('pDone').textContent  = tasks.filter(t => t.completed).length;
+    document.getElementById('pDone').textContent  =
+        tasks.filter(t => (t.completedDates || []).length > 0).length;
+
+    updateBigAvatar();
     document.getElementById('profileModal').classList.add('show');
     document.getElementById('userDropdown').classList.remove('show');
 }
-
 function closeProfile(){
     document.getElementById('profileModal').classList.remove('show');
 }
-
 document.getElementById('profileModal').addEventListener('click', e => {
     if (e.target.id === 'profileModal') closeProfile();
 });
 
+function updateBigAvatar(){
+    const el = document.getElementById('bigAvatar');
+    el.innerHTML = '';
+    el.style.background = 'linear-gradient(135deg,#667eea,#764ba2)';
+
+    if (tempAvatar && tempAvatar.startsWith('data:')){
+        const img = document.createElement('img');
+        img.src = tempAvatar;
+        el.appendChild(img);
+    } else if (tempAvatar){
+        el.textContent = tempAvatar;
+    } else if (currentUser){
+        el.textContent = (currentUser.nickname || '用').slice(-1);
+    } else {
+        el.textContent = '用';
+    }
+}
+
+function pickAvatar(emoji){
+    tempAvatar = emoji;
+    updateBigAvatar();
+}
+function clearAvatar(){
+    tempAvatar = '';
+    updateBigAvatar();
+}
+function handleAvatarUpload(event){
+    const file = event.target.files[0];
+    event.target.value = '';
+    if (!file) return;
+    if (!file.type.startsWith('image/')){
+        showMessage('请选择图片文件', 'error');
+        return;
+    }
+    if (file.size > 5 * 1024 * 1024){
+        showMessage('图片不能超过 5MB', 'error');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = e => {
+        const img = new Image();
+        img.onload = () => {
+            const size = 96;
+            const canvas = document.createElement('canvas');
+            canvas.width  = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            const s = Math.min(img.width, img.height);
+            const sx = (img.width - s) / 2;
+            const sy = (img.height - s) / 2;
+            ctx.drawImage(img, sx, sy, s, s, 0, 0, size, size);
+            tempAvatar = canvas.toDataURL('image/jpeg', 0.85);
+            updateBigAvatar();
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function saveProfile(){
+    const nick = document.getElementById('pNickInput').value.trim();
+    if (!nick){
+        showMessage('昵称不能为空', 'error');
+        return;
+    }
+    if (nick.length > 20){
+        showMessage('昵称最长 20 个字', 'error');
+        return;
+    }
+
+    currentUser.nickname = nick;
+    currentUser.avatar   = tempAvatar;
+
+    saveUserProfileStorage(currentUser.phone, {
+        nickname: nick,
+        avatar: tempAvatar
+    });
+    persistSession();
+    renderUserInfo();
+    closeProfile();
+    showMessage('个人信息已保存');
+}
+
 /* ============================================================
-   10. 初始化
+   11. 初始化
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
     setupCanvas();
     refreshCaptcha();
 
-    // 回填“记住我”
     const remembered = localStorage.getItem(K_REMEMBER);
     if (remembered){
         document.getElementById('loginPhone').value = remembered;
         document.getElementById('rememberMe').checked = true;
     }
 
-    // 回车添加任务
+    // 回车快捷键
     document.getElementById('taskInput').addEventListener('keypress', e => {
         if (e.key === 'Enter') addTask();
     });
 
-    // 回车登录
-    ['loginPhone', 'loginPassword', 'loginCaptcha'].forEach(id => {
+    ['loginPhone', 'loginPassword'].forEach(id => {
         document.getElementById(id).addEventListener('keypress', e => {
             if (e.key === 'Enter') doLogin();
+        });
+    });
+    ['regPhone', 'regPassword', 'regConfirm', 'regCaptcha'].forEach(id => {
+        document.getElementById(id).addEventListener('keypress', e => {
+            if (e.key === 'Enter') doRegister();
         });
     });
 
